@@ -183,8 +183,11 @@
             </ol>
             
             <div class="mt-12">
-              <a id="resume-link" class="inline-flex items-baseline font-medium leading-tight text-slate-200 hover:text-teal-300 focus-visible:text-teal-300 group/link text-base" href="https://drive.google.com/drive/u/0/folders/1oGXa3U7pPXHj2WOIi6uaINk5wbx-_pqB" target="_blank" rel="noreferrer noopener" aria-label="View Full Resume">
-                <span>View Full Resume <svg class="inline-block h-4 w-4 shrink-0 transition-transform group-hover/link:-translate-y-1 group-hover/link:translate-x-1 group-focus-visible/link:-translate-y-1 group-focus-visible/link:translate-x-1 motion-reduce:transition-none ml-1" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 14.78a.75.75 0 001.06 0l7.22-7.22v5.69a.75.75 0 001.5 0v-7.5a.75.75 0 00-.75-.75h-7.5a.75.75 0 000 1.5h5.69l-7.22 7.22a.75.75 0 000 1.06z" clip-rule="evenodd"></path></svg></span>
+              <a id="resume-link" class="inline-flex items-baseline font-medium leading-tight text-slate-200 hover:text-teal-300 focus-visible:text-teal-300 group/link text-base" href="https://drive.google.com/drive/u/0/folders/1oGXa3U7pPXHj2WOIi6uaINk5wbx-_pqB" target="_blank" rel="noreferrer noopener" aria-label="View Resume">
+                <span>View Resume <svg class="inline-block h-4 w-4 shrink-0 transition-transform group-hover/link:-translate-y-1 group-hover/link:translate-x-1 group-focus-visible/link:-translate-y-1 group-focus-visible/link:translate-x-1 motion-reduce:transition-none ml-1" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 14.78a.75.75 0 001.06 0l7.22-7.22v5.69a.75.75 0 001.5 0v-7.5a.75.75 0 00-.75-.75h-7.5a.75.75 0 000 1.5h5.69l-7.22 7.22a.75.75 0 000 1.06z" clip-rule="evenodd"></path></svg></span>
+              </a>
+              <a id="resume-download" class="inline-flex items-baseline font-medium leading-tight text-slate-400 hover:text-teal-300 focus-visible:text-teal-300 group/dl text-sm ml-4" href="#" aria-label="Download Resume">
+                <span><svg class="inline-block h-4 w-4 shrink-0 transition-transform group-hover/dl:translate-y-0.5 motion-reduce:transition-none" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 3a.75.75 0 01.75.75v7.69l2.72-2.72a.75.75 0 111.06 1.06l-4 4a.75.75 0 01-1.06 0l-4-4a.75.75 0 111.06-1.06l2.72 2.72V3.75A.75.75 0 0110 3z"></path><path d="M3 15.75a.75.75 0 01.75-.75h12.5a.75.75 0 010 1.5H3.75a.75.75 0 01-.75-.75z"></path></svg> Download</span>
               </a>
             </div>
           </div>
@@ -470,16 +473,16 @@
 
   <script src="script.js"></script>
   <script>
-    document.getElementById("resume-link").addEventListener("click", function (e) {
+    var RESUME_API = "https://script.google.com/macros/s/AKfycby75PMLSbpTxL846-kBvuIIVQw-uRDR21H3A0wE2WNjMBOpXXvQXMK_yTkT6QUStTKN4w/exec";
+    document.getElementById("resume-download").addEventListener("click", function (e) {
       e.preventDefault();
-      var link = this;
-      var original = link.querySelector("span").textContent;
-      link.querySelector("span").firstChild.textContent = "Downloading... ";
-      fetch("https://script.google.com/macros/s/AKfycby75PMLSbpTxL846-kBvuIIVQw-uRDR21H3A0wE2WNjMBOpXXvQXMK_yTkT6QUStTKN4w/exec")
+      var btn = this;
+      btn.querySelector("span").lastChild.textContent = " Downloading...";
+      fetch(RESUME_API)
         .then(function (r) { return r.json(); })
         .then(function (data) { window.open(data.url, "_blank"); })
-        .catch(function () { window.open(link.href, "_blank"); })
-        .finally(function () { link.querySelector("span").firstChild.textContent = "View Full Resume "; });
+        .catch(function () { window.open(document.getElementById("resume-link").href, "_blank"); })
+        .finally(function () { btn.querySelector("span").lastChild.textContent = " Download"; });
     });
   </script>
 </body>
