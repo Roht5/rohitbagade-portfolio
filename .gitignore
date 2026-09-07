@@ -1,0 +1,8 @@
+.firebase/
+.firebaserc
+firebase.json
+portfolio-next/
+experiments/
+**/node_modules/
+.DS_Store
+.env*

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resilient Event-Driven Microservices: Kafka Retries and Dead Letter Topics | Rohit Bagade</title>
+  <meta name="description" content="Handling transient and poison pill errors in event-driven systems using Apache Kafka without blocking main consumer streams.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/blog/style.css">
+</head>
+<body>
+
+  <!-- Reading Progress Bar -->
+  <div id="progress-bar"></div>
+  
+  <!-- Radial Spotlight Effect -->
+  <div id="spotlight" class="pointer-events-none fixed inset-0 z-30 transition duration-300"></div>
+
+  <div class="container">
+    <nav>
+      <a href="/#blog" class="active">← Back to Portfolio</a>
+    </nav>
+
+    <article>
+      <header class="article-header">
+        <h1>Resilient Event-Driven Microservices: Kafka Retries and Dead Letter Topics</h1>
+        <div class="article-meta">
+          <span>Published on August 24, 2025</span>
+          <span>&middot;</span>
+          <span>5 min read</span>
+          <span>&middot;</span>
+          <span>980 views</span>
+        </div>
+      </header>
+
+      <section class="article-content">
+        <p>
+          In a message-driven architecture built on Apache Kafka, consumers process a continuous stream of events. But what happens when processing fails? If a downstream service is temporarily unavailable, or a message contains corrupt data, naive error handling can easily crash your consumers or cause message loss.
+        </p>
+
+        <p>
+          To achieve fault tolerance, we must distinguish between <strong>transient errors</strong> (like network drops) and <strong>non-transient errors</strong> (poison pills like invalid formats), and route them appropriately without stopping the consumer queue.
+        </p>
+
+        <h2>The Problem of Blocking Retries</h2>
+        <p>
+          Retrying on the main thread blocks all subsequent events in the partition. If a consumer halts to retry a database connection 10 times, the backlog increases and latency spikes. Instead of blocking, we can use <strong>non-blocking retries</strong> via dedicated retry topics.
+        </p>
+
+        <h2>Decoupled Retry Flow</h2>
+        <p>
+          A highly resilient pattern involves establishing sequential retry topics and a Dead Letter Queue (DLQ) topic:
+        </p>
+
+        <ul>
+          <li><strong>primary-topic:</strong> The main stream where all messages arrive.</li>
+          <li><strong>retry-topic-1m:</strong> Message is routed here if processing fails. Retry starts after 1 minute.</li>
+          <li><strong>retry-topic-5m:</strong> Secondary retry queue with a longer delay.</li>
+          <li><strong>dlq-topic:</strong> Where messages go if they exhaust all retries. This is monitored for manual review.</li>
+        </ul>
+
+        <h2>Implementing Dead Letter Queue (DLQ) Safeguards</h2>
+        <p>
+          When routing to a DLQ, it is crucial to attach error metadata in the Kafka message headers:
+        </p>
+
+        <pre><code>var dlqHeader = new Headers();
+dlqHeader.Add("x-original-topic", Encoding.UTF8.GetBytes(context.Topic));
+dlqHeader.Add("x-exception-message", Encoding.UTF8.GetBytes(ex.Message));
+dlqHeader.Add("x-exception-stacktrace", Encoding.UTF8.GetBytes(ex.StackTrace));
+
+var dlqMessage = new Message<string, string> {
+    Key = message.Key,
+    Value = message.Value,
+    Headers = dlqHeader
+};
+await producer.ProduceAsync("primary-topic-dlq", dlqMessage);</code></pre>
+
+        <p>
+          This keeps your main stream pipeline running smoothly and provides full visibility to fix bug-inducing "poison pill" payloads.
+        </p>
+      </section>
+    </article>
+
+    <footer>
+      <div>&copy; 2026 Rohit Bagade</div>
+      <div>
+        <a href="https://github.com/Roht5" target="_blank" rel="noreferrer noopener">github</a> &middot;
+        <a href="https://linkedin.com/" target="_blank" rel="noreferrer noopener">linkedin</a> &middot;
+        <a href="mailto:rohitbagadeofficial@gmail.com">email</a>
+      </div>
+    </footer>
+  </div>
+
+  <script src="/blog/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Implementing Distributed Lock Patterns with Redis in C# | Rohit Bagade</title>
+  <meta name="description" content="Preventing race conditions in distributed systems using Redlock and StackExchange.Redis client libraries in .NET Core.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/blog/style.css">
+</head>
+<body>
+
+  <!-- Reading Progress Bar -->
+  <div id="progress-bar"></div>
+  
+  <!-- Radial Spotlight Effect -->
+  <div id="spotlight" class="pointer-events-none fixed inset-0 z-30 transition duration-300"></div>
+
+  <div class="container">
+    <nav>
+      <a href="/#blog" class="active">← Back to Portfolio</a>
+    </nav>
+
+    <article>
+      <header class="article-header">
+        <h1>Implementing Distributed Lock Patterns with Redis in C#</h1>
+        <div class="article-meta">
+          <span>Published on November 12, 2025</span>
+          <span>&middot;</span>
+          <span>4 min read</span>
+          <span>&middot;</span>
+          <span>1,240 views</span>
+        </div>
+      </header>
+
+      <section class="article-content">
+        <p>
+          In a distributed backend ecosystem, preventing multiple concurrent operations from modifying the same resource is one of the most common challenges. While in-memory locks like <code>lock</code> or <code>SemaphoreSlim</code> work perfectly within a single process, they fall short when scaling your application across multiple containers.
+        </p>
+
+        <p>
+          This is where a centralized distributed locking mechanism becomes necessary. Using <strong>Redis</strong> and the <strong>Redlock</strong> algorithm, we can safely coordinate access across distributed nodes in a high-throughput .NET Core microservices architecture.
+        </p>
+
+        <h2>The Basic Concept: SET with NX and PX</h2>
+        <p>
+          At its core, a Redis distributed lock relies on the atomic <code>SET</code> command with <code>NX</code> (set if not exists) and <code>PX</code> (set expire time in milliseconds) options.
+        </p>
+
+        <pre><code>// Simple lock acquisition
+var db = redis.GetDatabase();
+string lockKey = "resource:order:12345";
+string token = Guid.NewGuid().ToString();
+TimeSpan expiry = TimeSpan.FromSeconds(30);
+
+bool acquired = db.StringSet(lockKey, token, expiry, When.NotExists);</code></pre>
+
+        <p>
+          By storing a unique token, we ensure that a node can only release the lock if it owns the token. This prevents a node from accidentally releasing a lock acquired by another process that took longer to execute.
+        </p>
+
+        <h2>Releasing Safely with Lua Scripts</h2>
+        <p>
+          To release the lock atomically, we check if the key's value matches our token before deleting it. This requires executing a small Lua script:
+        </p>
+
+        <pre><code>string luaRelease = @"
+    if redis.call('get', KEYS[1]) == ARGV[1] then
+        return redis.call('del', KEYS[1])
+    else
+        return 0
+    end";
+
+var result = db.ScriptEvaluate(luaRelease, 
+    new RedisKey[] { lockKey }, 
+    new RedisValue[] { token });</code></pre>
+
+        <p>
+          This pattern guarantees that the check-and-delete steps happen as a single atomic operation inside Redis, ensuring system safety and data consistency.
+        </p>
+      </section>
+    </article>
+
+    <footer>
+      <div>&copy; 2026 Rohit Bagade</div>
+      <div>
+        <a href="https://github.com/Roht5" target="_blank" rel="noreferrer noopener">github</a> &middot;
+        <a href="https://linkedin.com/" target="_blank" rel="noreferrer noopener">linkedin</a> &middot;
+        <a href="mailto:rohitbagadeofficial@gmail.com">email</a>
+      </div>
+    </footer>
+  </div>
+
+  <script src="/blog/script.js"></script>
+</body>
+</html>

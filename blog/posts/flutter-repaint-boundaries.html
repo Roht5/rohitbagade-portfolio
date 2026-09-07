@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Under the Hood: Flutter's Rendering Pipeline and RepaintBoundaries | Rohit Bagade</title>
+  <meta name="description" content="Exploring how Flutter builds, layouts, and paints widgets, and how to optimize scroll performance using RepaintBoundaries.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/blog/style.css">
+</head>
+<body>
+
+  <!-- Reading Progress Bar -->
+  <div id="progress-bar"></div>
+  
+  <!-- Radial Spotlight Effect -->
+  <div id="spotlight" class="pointer-events-none fixed inset-0 z-30 transition duration-300"></div>
+
+  <div class="container">
+    <nav>
+      <a href="/#blog" class="active">← Back to Portfolio</a>
+    </nav>
+
+    <article>
+      <header class="article-header">
+        <h1>Under the Hood: Flutter's Rendering Pipeline and RepaintBoundaries</h1>
+        <div class="article-meta">
+          <span>Published on October 5, 2024</span>
+          <span>&middot;</span>
+          <span>5 min read</span>
+          <span>&middot;</span>
+          <span>2,110 views</span>
+        </div>
+      </header>
+
+      <section class="article-content">
+        <p>
+          One of Flutter's greatest selling points is its ability to build and paint beautiful interfaces at a buttery-smooth 60fps or 120fps. However, as your applications grow and UI layouts become complex with heavy animations, custom shaders, or extensive scrolling lists, rendering bottlenecks can begin to creep in.
+        </p>
+
+        <p>
+          To resolve performance issues like frame drops, we must look beyond basic widgets and understand how Flutter's rendering engine compiles layouts, and how we can use <strong>RepaintBoundaries</strong> to paint only what has actually changed.
+        </p>
+
+        <h2>The Three Trees</h2>
+        <p>
+          Flutter maintains three parallel tree structures:
+        </p>
+
+        <ul>
+          <li><strong>Widget Tree:</strong> The declarative configuration of your UI. Super lightweight and rebuilt constantly.</li>
+          <li><strong>Element Tree:</strong> The glue binding the Widget and RenderObject. It controls lifecycle updates.</li>
+          <li><strong>RenderObject Tree:</strong> Handles the heavy lifting—size computation, layout, constraints, and paint routines.</li>
+        </ul>
+
+        <h2>Understanding RepaintBoundaries</h2>
+        <p>
+          By default, when a RenderObject changes (e.g. an animated indicator spin), Flutter marked its entire container as "dirty", rebuilding and repainting the parent and its sibling nodes.
+        </p>
+
+        <p>
+          By wrapping the animated widget inside a <code>RepaintBoundary</code>, we tell Flutter to create a separate display layer for this widget subtree.
+        </p>
+
+        <pre><code>// Preventing unnecessary paints
+Widget build(BuildContext context) {
+  return Row(
+    children: [
+      const StaticHeavyLayout(),
+      RepaintBoundary(
+        child: SpinningActivityIndicator(),
+      ),
+    ],
+  );
+}</code></pre>
+
+        <p>
+          Now, when the indicator spins, only its layer is marked dirty and repainted. The <code>StaticHeavyLayout</code> stays cached on the GPU, saving processing cycles and keeping scroll speeds ultra-smooth.
+        </p>
+      </section>
+    </article>
+
+    <footer>
+      <div>&copy; 2026 Rohit Bagade</div>
+      <div>
+        <a href="https://github.com/Roht5" target="_blank" rel="noreferrer noopener">github</a> &middot;
+        <a href="https://linkedin.com/" target="_blank" rel="noreferrer noopener">linkedin</a> &middot;
+        <a href="mailto:rohitbagadeofficial@gmail.com">email</a>
+      </div>
+    </footer>
+  </div>
+
+  <script src="/blog/script.js"></script>
+</body>
+</html>

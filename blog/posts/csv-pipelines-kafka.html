@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Building High-Throughput CSV Pipelines with Kafka & DLQ Safeguards | Rohit Bagade</title>
+  <meta name="description" content="A technical deep dive into processing millions of records from bulk CSV uploads reliably using Apache Kafka and Dead Letter Queue patterns in C#.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/blog/style.css">
+</head>
+<body>
+
+  <!-- Reading Progress Bar -->
+  <div id="progress-bar"></div>
+  
+  <!-- Radial Spotlight Effect -->
+  <div id="spotlight" class="pointer-events-none fixed inset-0 z-30 transition duration-300"></div>
+
+  <div class="container">
+    <nav>
+      <a href="/#blog" class="active">← Back to Portfolio</a>
+    </nav>
+
+    <article>
+      <header class="article-header">
+        <h1>Building High-Throughput CSV Pipelines with Kafka & DLQ Safeguards</h1>
+        <div class="article-meta">
+          <span>Published on June 10, 2026</span>
+          <span>&middot;</span>
+          <span>5 min read</span>
+          <span>&middot;</span>
+          <span>1,200 views</span>
+        </div>
+      </header>
+
+      <section class="article-content">
+        <p>
+          Processing large files (like bulk CSV reports containing millions of items) can easily overwhelm backend servers. Memory leaks, connection timeouts, and database lockouts are typical symptoms of poor architectural boundaries.
+        </p>
+        
+        <p>
+          At Zenoti, I engineered a highly resilient bulk CSV ingestion pipeline that streams data chunks through <strong>Apache Kafka</strong>, protecting our core transactional databases. Here is how we designed it.
+        </p>
+
+        <h2>The Pipeline Architecture</h2>
+        <p>
+          Instead of parsing the entire CSV document in memory and running database operations inside a single HTTP request thread, the pipeline is divided into three distinct stages:
+        </p>
+        
+        <ul>
+          <li><strong>Producer Streamer:</strong> Validates and reads the uploaded CSV as a stream, emitting structured events to a Kafka topic in micro-batches.</li>
+          <li><strong>Kafka Message Broker:</strong> Distributes events across topic partitions to allow parallel consumer horizontal scaling.</li>
+          <li><strong>Consumer Ingestor:</strong> Pulls messages, runs business validations, performs deduplication, and performs bulk upserts into PostgreSQL.</li>
+        </ul>
+
+        <h2>Implementing Dead Letter Queue (DLQ) Safeguards</h2>
+        <p>
+          When dealing with a million records, data corruption is inevitable (e.g. malformed strings, null numbers). A single faulty event must not crash the consumer or stall the offset commit. We implemented a <strong>Dead Letter Queue (DLQ)</strong> pattern. If a message fails parsing or business validations after three retries, it is routed to a secondary DLQ topic for diagnostic analysis.
+        </p>
+
+        <p>
+          Below is a simplified C# consumer showing how to catch deserialization errors and route them to a DLQ:
+        </p>
+
+        <pre><code>public async Task ConsumeEventsAsync(CancellationToken cancellationToken)
+{
+    using var consumer = new ConsumerBuilder&lt;string, string&gt;(_config).Build();
+    consumer.Subscribe("lead-uploads-topic");
+
+    while (!cancellationToken.IsCancellationRequested)
+    {
+        try
+        {
+            var result = consumer.Consume(cancellationToken);
+            var lead = DeserializeOrRouteToDLQ(result.Message.Value, out var error);
+            
+            if (error != null)
+            {
+                await _dlqProducer.ProduceAsync("lead-uploads-dlq", new Message&lt;string, string&gt; {
+                    Key = result.Message.Key,
+                    Value = result.Message.Value
+                });
+                consumer.Commit(result);
+                continue;
+            }
+
+            await ProcessLeadRecordAsync(lead);
+            consumer.Commit(result);
+        }
+        catch (ConsumeException ex)
+        {
+            _logger.LogError($"Kafka consumer error: {ex.Error.Reason}");
+        }
+    }
+}</code></pre>
+
+        <h2>Results & Key Takeaways</h2>
+        <p>
+          By isolating files into streams and introducing backpressure limits via Kafka's partition offset management, database write locks dropped by <strong>85%</strong>, and we processed ~1M records in under 3 minutes with zero memory alerts.
+        </p>
+      </section>
+    </article>
+
+    <footer>
+      <div>&copy; 2026 Rohit Bagade</div>
+      <div>
+        <a href="https://github.com/Roht5" target="_blank" rel="noreferrer noopener">github</a> &middot;
+        <a href="https://linkedin.com/" target="_blank" rel="noreferrer noopener">linkedin</a> &middot;
+        <a href="mailto:rohit@example.com">email</a>
+      </div>
+    </footer>
+  </div>
+
+  <script src="/blog/script.js"></script>
+</body>
+</html>

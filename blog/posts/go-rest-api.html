@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Building Your First REST API in Go: From Scratch to Production | Rohit Bagade</title>
+  <meta name="description" content="Setting up a lightweight, high-performance web service in Go using standard library tools and database connections.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/blog/style.css">
+</head>
+<body>
+
+  <!-- Reading Progress Bar -->
+  <div id="progress-bar"></div>
+  
+  <!-- Radial Spotlight Effect -->
+  <div id="spotlight" class="pointer-events-none fixed inset-0 z-30 transition duration-300"></div>
+
+  <div class="container">
+    <nav>
+      <a href="/#blog" class="active">← Back to Portfolio</a>
+    </nav>
+
+    <article>
+      <header class="article-header">
+        <h1>Building Your First REST API in Go: From Scratch to Production</h1>
+        <div class="article-meta">
+          <span>Published on April 14, 2023</span>
+          <span>&middot;</span>
+          <span>5 min read</span>
+          <span>&middot;</span>
+          <span>3,120 views</span>
+        </div>
+      </header>
+
+      <section class="article-content">
+        <p>
+          Go (or Golang) has taken the backend engineering world by storm due to its execution speed, simple syntax, and native support for concurrency via goroutines. Unlike other languages that require massive web frameworks, Go's standard library includes almost everything you need to build production-grade REST APIs.
+        </p>
+
+        <p>
+          In this post, we will walk through setting up a simple, high-performance API server using Go's built-in <code>net/http</code> package, connecting to database services, and handling JSON serialization.
+        </p>
+
+        <h2>1. The Simple Server Structure</h2>
+        <p>
+          We can initialize an API endpoint in just a few lines of code:
+        </p>
+
+        <pre><code>package main
+
+import (
+    "fmt"
+    "net/http"
+)
+
+func helloHandler(w http.ResponseWriter, r *http.Request) {
+    fmt.Fprintf(w, "Hello, World!")
+}
+
+func main() {
+    http.HandleFunc("/hello", helloHandler)
+    http.ListenAndServe(":8080", nil)
+}</code></pre>
+
+        <p>
+          This compiles into a single, dependency-free binary that boots up instantly and uses only a few megabytes of memory.
+        </p>
+
+        <h2>2. Parsing JSON Structs</h2>
+        <p>
+          Go uses struct tags to map JSON keys directly to typed fields. Here is how to create a handler that decodes requests and writes JSON responses:
+        </p>
+
+        <pre><code>type Product struct {
+    ID    string  `json:"id"`
+    Name  string  `json:"name"`
+    Price float64 `json:"price"`
+}
+
+func createProductHandler(w http.ResponseWriter, r *http.Request) {
+    var p Product
+    err := json.NewDecoder(r.Body).Decode(&p)
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusBadRequest)
+        return
+    }
+    
+    w.Header().Set("Content-Type", "application/json")
+    w.WriteHeader(http.StatusCreated)
+    json.NewEncoder(w).Encode(p)
+}</code></pre>
+
+        <p>
+          By leveraging Go's strong typing and fast compiler execution, you can build extremely scalable microservices capable of handling thousands of requests per second out-of-the-box.
+        </p>
+      </section>
+    </article>
+
+    <footer>
+      <div>&copy; 2026 Rohit Bagade</div>
+      <div>
+        <a href="https://github.com/Roht5" target="_blank" rel="noreferrer noopener">github</a> &middot;
+        <a href="https://linkedin.com/" target="_blank" rel="noreferrer noopener">linkedin</a> &middot;
+        <a href="mailto:rohitbagadeofficial@gmail.com">email</a>
+      </div>
+    </footer>
+  </div>
+
+  <script src="/blog/script.js"></script>
+</body>
+</html>

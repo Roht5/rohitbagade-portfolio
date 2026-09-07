@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Projects | Rohit Bagade</title>
+  <meta name="description" content="A complete archive of software engineering projects, microservices, and applications built by Rohit Bagade.">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="file:///Users/rohitbagade/Rohit/AEF/Career/Projects/Portfolio/archive.html">
+  <meta property="og:title" content="All Projects | Rohit Bagade">
+  <meta property="og:description" content="A complete archive of software engineering projects, microservices, and applications built by Rohit Bagade.">
+  <meta property="og:image" content="file:///Users/rohitbagade/.gemini/antigravity/brain/e822eb9d-3954-43d7-8532-df5fd481fc40/skillbridge_mockup_1781122751469.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  
+  <style>
+    /* Archive page specific layouts */
+    .archive-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 5rem 1.5rem;
+    }
+    @media (min-width: 768px) {
+      .archive-container {
+        padding: 6rem 3rem;
+      }
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 3rem;
+      text-align: left;
+    }
+    
+    th, td {
+      padding: 1rem 0.5rem;
+      border-bottom: 1px solid var(--color-border-hover);
+      vertical-align: middle;
+    }
+    
+    th {
+      color: var(--color-text-primary);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    
+    td {
+      font-size: 0.875rem;
+    }
+    
+    .year-col {
+      color: var(--color-text-muted);
+      font-weight: 500;
+      width: 10%;
+    }
+    
+    .title-col {
+      color: var(--color-text-primary);
+      font-weight: 600;
+      font-size: 1rem;
+      width: 25%;
+    }
+    
+    .made-at-col {
+      color: var(--color-text-secondary);
+      width: 15%;
+    }
+    
+    .built-with-col {
+      width: 35%;
+    }
+    
+    .links-col {
+      width: 15%;
+    }
+    
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      color: var(--color-accent-bright);
+      font-weight: 600;
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+    }
+    
+    .back-link svg {
+      margin-right: 0.5rem;
+      transition: transform 0.15s ease;
+    }
+    
+    .back-link:hover svg {
+      transform: translateX(-0.25rem);
+    }
+    
+    /* Hover Row Highlight */
+    tr {
+      transition: background-color 0.15s ease;
+    }
+    tbody tr:hover {
+      background-color: var(--color-card-hover);
+    }
+    
+    .tech-pill {
+      font-size: 0.7rem;
+      margin-right: 0.375rem;
+      margin-top: 0.25rem;
+      margin-bottom: 0.25rem;
+    }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-400 font-sans antialiased selection:bg-teal-300 selection:text-slate-900 relative min-h-screen">
+
+  <div class="archive-container">
+    <a href="index.html" class="back-link group">
+      <svg class="h-4 w-4 transform rotate-180 transition-transform" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path fill-rule="evenodd" d="M5.22 14.78a.75.75 0 001.06 0l7.22-7.22v5.69a.75.75 0 001.5 0v-7.5a.75.75 0 00-.75-.75h-7.5a.75.75 0 000 1.5h5.69l-7.22 7.22a.75.75 0 000 1.06z" clip-rule="evenodd"></path>
+      </svg>
+      Rohit Bagade
+    </a>
+    
+    <h1 class="text-4xl font-bold tracking-tight text-slate-200 sm:text-5xl">All Projects</h1>
+    
+    <table>
+      <thead>
+        <tr>
+          <th class="year-col">Year</th>
+          <th class="title-col">Project</th>
+          <th class="made-at-col">Made at</th>
+          <th class="built-with-col">Built with</th>
+          <th class="links-col">Link</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <!-- Notifyx -->
+        <tr>
+          <td class="year-col">2026</td>
+          <td class="title-col">Notifyx</td>
+          <td class="made-at-col">—</td>
+          <td class="built-with-col">
+            <div class="flex flex-wrap">
+              <span class="flex items-center rounded-full bg-teal-400/10 px-2.5 py-0.5 text-teal-300 tech-pill">Go</span>
+              <span class="flex items-center rounded-full bg-teal-400/10 px-2.5 py-0.5 text-teal-300 tech-pill">Kafka</span>
+              <span class="flex items-center rounded-full bg-teal-400/10 px-2.5 py-0.5 text-teal-300 tech-pill">Redis</span>
+              <span class="flex items-center rounded-full bg-teal-400/10 px-2.5 py-0.5 text-teal-300 tech-pill">PostgreSQL</span>
+              <span class="flex items-center rounded-full bg-teal-400/10 px-2.5 py-0.5 text-teal-300 tech-pill">WebSocket</span>
+            </div>
+          </td>
+          <td class="links-col">
+            <a href="https://github.com/Roht5/Notifyx" target="_blank" rel="noreferrer noopener" class="inline-flex items-baseline font-medium text-slate-300 hover:text-teal-300 group/link" aria-label="GitHub Repository">
+              <span>GitHub <svg class="inline-block h-3.5 w-3.5 shrink-0 transition-transform group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5 ml-1" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 14.78a.75.75 0 001.06 0l7.22-7.22v5.69a.75.75 0 001.5 0v-7.5a.75.75 0 00-.75-.75h-7.5a.75.75 0 000 1.5h5.69l-7.22 7.22a.75.75 0 000 1.06z" clip-rule="evenodd"></path></svg></span>
+            </a>
+          </td>
+        </tr>
+
+        <!-- Zenoti LMS -->
+        <tr>
+          <td class="year-col">2024</td>
+          <td class="title-col">Lead Management System (Wellness CRM)</td>
+          <td class="made-at-col">Zenoti</td>
+          <td class="built-with-col">
+            <div class="flex flex-wrap">
+              <span class="flex items-center rounded-full bg-teal-400/10 px-2.5 py-0.5 text-teal-300 tech-pill">.NET Core 8</span>
+              <span class="flex items-center rounded-full bg-teal-400/10 px-2.5 py-0.5 text-teal-300 tech-pill">C#</span>
+              <span class="flex items-center rounded-full bg-teal-400/10 px-2.5 py-0.5 text-teal-300 tech-pill">PostgreSQL</span>
+              <span class="flex items-center rounded-full bg-teal-400/10 px-2.5 py-0.5 text-teal-300 tech-pill">Kafka</span>
+              <span class="flex items-center rounded-full bg-teal-400/10 px-2.5 py-0.5 text-teal-300 tech-pill">Redis</span>
+            </div>
+          </td>
+          <td class="links-col">
+            <a href="https://www.zenoti.com/ai-workforce/lead-manager" target="_blank" rel="noreferrer noopener" class="inline-flex items-baseline font-medium text-slate-300 hover:text-teal-300 group/link" aria-label="Zenoti AI Lead Manager (opens in a new tab)">
+              <span>zenoti.com <svg class="inline-block h-3.5 w-3.5 shrink-0 transition-transform group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5 ml-1" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 14.78a.75.75 0 001.06 0l7.22-7.22v5.69a.75.75 0 001.5 0v-7.5a.75.75 0 00-.75-.75h-7.5a.75.75 0 000 1.5h5.69l-7.22 7.22a.75.75 0 000 1.06z" clip-rule="evenodd"></path></svg></span>
+            </a>
+          </td>
+        </tr>
+        
+        <!-- Zenoti AI Workout Builder -->
+        <tr>
+          <td class="year-col">2024</td>
+          <td class="title-col">AI Workout Builder (1st Place LMS Hackathon)</td>
+          <td class="made-at-col">Zenoti</td>
+          <td class="built-with-col">
+            <div class="flex flex-wrap">
+              <span class="flex items-center rounded-full bg-teal-400/10 px-2.5 py-0.5 text-teal-300 tech-pill">.NET Core 8</span>
+              <span class="flex items-center rounded-full bg-teal-400/10 px-2.5 py-0.5 text-teal-300 tech-pill">AI APIs</span>
+              <span class="flex items-center rounded-full bg-teal-400/10 px-2.5 py-0.5 text-teal-300 tech-pill">SQL Server</span>
+            </div>
+          </td>
+          <td class="links-col">
+            <a href="https://www.zenoti.com/ai-workforce/ai-workout-builder" target="_blank" rel="noreferrer noopener" class="inline-flex items-baseline font-medium text-slate-300 hover:text-teal-300 group/link" aria-label="Zenoti AI Workout Builder (opens in a new tab)">
+              <span>zenoti.com <svg class="inline-block h-3.5 w-3.5 shrink-0 transition-transform group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5 ml-1" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 14.78a.75.75 0 001.06 0l7.22-7.22v5.69a.75.75 0 001.5 0v-7.5a.75.75 0 00-.75-.75h-7.5a.75.75 0 000 1.5h5.69l-7.22 7.22a.75.75 0 000 1.06z" clip-rule="evenodd"></path></svg></span>
+            </a>
+          </td>
+        </tr>
+        
+        <!-- SkillBridge v2.0 -->
+        <tr>
+          <td class="year-col">2024</td>
+          <td class="title-col">SkillBridge v2.0</td>
+          <td class="made-at-col">—</td>
+          <td class="built-with-col">
+            <div class="flex flex-wrap">
+              <span class="flex items-center rounded-full bg-teal-400/10 px-2.5 py-0.5 text-teal-300 tech-pill">Flutter</span>
+              <span class="flex items-center rounded-full bg-teal-400/10 px-2.5 py-0.5 text-teal-300 tech-pill">Firebase</span>
+              <span class="flex items-center rounded-full bg-teal-400/10 px-2.5 py-0.5 text-teal-300 tech-pill">Dart</span>
+              <span class="flex items-center rounded-full bg-teal-400/10 px-2.5 py-0.5 text-teal-300 tech-pill">Google Maps</span>
+            </div>
+          </td>
+          <td class="links-col">
+            <a href="https://github.com/Roht5/SkillBridge-v2.0" target="_blank" rel="noreferrer noopener" class="inline-flex items-baseline font-medium text-slate-300 hover:text-teal-300 group/link" aria-label="GitHub Repository">
+              <span>GitHub <svg class="inline-block h-3.5 w-3.5 shrink-0 transition-transform group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5 ml-1" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 14.78a.75.75 0 001.06 0l7.22-7.22v5.69a.75.75 0 001.5 0v-7.5a.75.75 0 00-.75-.75h-7.5a.75.75 0 000 1.5h5.69l-7.22 7.22a.75.75 0 000 1.06z" clip-rule="evenodd"></path></svg></span>
+            </a>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

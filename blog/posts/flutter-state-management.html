@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Deep Dive into Flutter State Management: Provider vs BLoC | Rohit Bagade</title>
+  <meta name="description" content="Comparing the two most popular state management architectures in Flutter for scaling production-level applications.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/blog/style.css">
+</head>
+<body>
+
+  <!-- Reading Progress Bar -->
+  <div id="progress-bar"></div>
+  
+  <!-- Radial Spotlight Effect -->
+  <div id="spotlight" class="pointer-events-none fixed inset-0 z-30 transition duration-300"></div>
+
+  <div class="container">
+    <nav>
+      <a href="/#blog" class="active">← Back to Portfolio</a>
+    </nav>
+
+    <article>
+      <header class="article-header">
+        <h1>A Deep Dive into Flutter State Management: Provider vs BLoC</h1>
+        <div class="article-meta">
+          <span>Published on December 10, 2023</span>
+          <span>&middot;</span>
+          <span>4 min read</span>
+          <span>&middot;</span>
+          <span>1,890 views</span>
+        </div>
+      </header>
+
+      <section class="article-content">
+        <p>
+          State management remains one of the most debated topics in the Flutter community. As a declarative framework, Flutter builds its UI to reflect the current state of your application. When state changes, the UI rebuilds. 
+        </p>
+
+        <p>
+          For simple applications, default setState is sufficient. But for enterprise-grade codebases with complex business rules, nested navigation, and background sync operations, you need a structured architecture. The two most dominant choices are <strong>Provider</strong> (often combined with ChangeNotifier) and <strong>BLoC</strong> (Business Logic Component).
+        </p>
+
+        <h2>Provider: Simplicity and Integration</h2>
+        <p>
+          Provider is a wrapper around InheritedWidget, making objects easy to consume throughout the widget tree. When paired with <code>ChangeNotifier</code>, it offers an intuitive way to manage simple reactive states:
+        </p>
+
+        <pre><code>// Simple ChangeNotifier
+class CartModel extends ChangeNotifier {
+  final List&lt;Item&gt; _items = [];
+  
+  void add(Item item) {
+    _items.add(item);
+    notifyListeners();
+  }
+}</code></pre>
+
+        <p>
+          It has a very gentle learning curve, boilerplate is minimal, and it integrates directly into standard Flutter paradigms.
+        </p>
+
+        <h2>BLoC: Predictable and Testable</h2>
+        <p>
+          BLoC leverages reactive programming (Streams) to completely decouple business logic from the UI. The UI dispatches **Events**, and the BLoC processes them to emit **States**.
+        </p>
+
+        <pre><code>// BLoC Event & State pattern
+class CartBloc extends Bloc&lt;CartEvent, CartState&gt; {
+  CartBloc() : super(CartInitial()) {
+    on&lt;AddItemEvent&gt;((event, emit) {
+      final updatedCart = List&lt;Item&gt;.from(state.items)..add(event.item);
+      emit(CartUpdatedState(updatedCart));
+    });
+  }
+}</code></pre>
+
+        <p>
+          Because every transition is represented by a formal event and state, BLoC is extremely easy to unit test. It enforces a strict separation of concerns, making it the preferred choice for large, multi-developer engineering projects.
+        </p>
+      </section>
+    </article>
+
+    <footer>
+      <div>&copy; 2026 Rohit Bagade</div>
+      <div>
+        <a href="https://github.com/Roht5" target="_blank" rel="noreferrer noopener">github</a> &middot;
+        <a href="https://linkedin.com/" target="_blank" rel="noreferrer noopener">linkedin</a> &middot;
+        <a href="mailto:rohitbagadeofficial@gmail.com">email</a>
+      </div>
+    </footer>
+  </div>
+
+  <script src="/blog/script.js"></script>
+</body>
+</html>

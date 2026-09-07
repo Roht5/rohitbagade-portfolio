@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Understanding Database Index Types: B-Trees, Hash, and GiST | Rohit Bagade</title>
+  <meta name="description" content="An under-the-hood look at how different database index types function and how to choose the right one for query optimization.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/blog/style.css">
+</head>
+<body>
+
+  <!-- Reading Progress Bar -->
+  <div id="progress-bar"></div>
+  
+  <!-- Radial Spotlight Effect -->
+  <div id="spotlight" class="pointer-events-none fixed inset-0 z-30 transition duration-300"></div>
+
+  <div class="container">
+    <nav>
+      <a href="/#blog" class="active">← Back to Portfolio</a>
+    </nav>
+
+    <article>
+      <header class="article-header">
+        <h1>Understanding Database Index Types: B-Trees, Hash, and GiST</h1>
+        <div class="article-meta">
+          <span>Published on August 8, 2023</span>
+          <span>&middot;</span>
+          <span>4 min read</span>
+          <span>&middot;</span>
+          <span>2,410 views</span>
+        </div>
+      </header>
+
+      <section class="article-content">
+        <p>
+          Indexes are the secret sauce of query performance. In relational databases like PostgreSQL and SQL Server, an index acts as a lookup helper, allowing the database engine to find specific rows without scanning the entire table from top to bottom.
+        </p>
+
+        <p>
+          However, indexes are not one-size-fits-all. Choosing the wrong index type can inflate your database size, slow down insert/update queries, and do absolutely nothing to speed up your searches.
+        </p>
+
+        <h2>1. B-Tree Indexes</h2>
+        <p>
+          The **B-Tree** (Balanced Tree) is the default and most widely used index type. It maintains sorted data in a self-balancing hierarchical structure, making it ideal for range queries (e.g. <code>WHERE age BETWEEN 18 AND 30</code>) and sorting (<code>ORDER BY</code>).
+        </p>
+
+        <p>
+          A B-Tree index handles matches, range lookups, and inequality operations seamlessly because of its sorted tree traversal: O(log N) lookup complexity.
+        </p>
+
+        <h2>2. Hash Indexes</h2>
+        <p>
+          Unlike B-Trees, **Hash indexes** only support simple equality operators (<code>=</code>). They build a flat hash table of values, maps them to row pointers, and offers constant-time O(1) lookups.
+        </p>
+
+        <p>
+          Use Hash indexes when you only need to match exact strings or IDs, but keep in mind they cannot speed up sorting or range evaluations.
+        </p>
+
+        <h2>3. GiST and GIN Indexes (PostgreSQL)</h2>
+        <p>
+          **GiST** (Generalized Search Tree) and **GIN** (Generalized Inverted Index) are specialized indexes used in PostgreSQL:
+        </p>
+
+        <ul>
+          <li><strong>GiST:</strong> Ideal for geometric shapes, coordinates, and range types (e.g. coordinates in a maps app).</li>
+          <li><strong>GIN:</strong> Best for full-text search, arrays, and JSONB structures. It indexes sub-keys and elements inside documents.</li>
+        </ul>
+      </section>
+    </article>
+
+    <footer>
+      <div>&copy; 2026 Rohit Bagade</div>
+      <div>
+        <a href="https://github.com/Roht5" target="_blank" rel="noreferrer noopener">github</a> &middot;
+        <a href="https://linkedin.com/" target="_blank" rel="noreferrer noopener">linkedin</a> &middot;
+        <a href="mailto:rohitbagadeofficial@gmail.com">email</a>
+      </div>
+    </footer>
+  </div>
+
+  <script src="/blog/script.js"></script>
+</body>
+</html>

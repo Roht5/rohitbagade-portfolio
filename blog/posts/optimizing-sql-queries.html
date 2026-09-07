@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Optimizing SQL Query Execution Times from Minutes to Seconds | Rohit Bagade</title>
+  <meta name="description" content="Technical details of optimizing heavy PostgreSQL database query workloads from minutes to seconds through indexes, execution analysis, and schema changes.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/blog/style.css">
+</head>
+<body>
+
+  <!-- Reading Progress Bar -->
+  <div id="progress-bar"></div>
+  
+  <!-- Radial Spotlight Effect -->
+  <div id="spotlight" class="pointer-events-none fixed inset-0 z-30 transition duration-300"></div>
+
+  <div class="container">
+    <nav>
+      <a href="/#blog" class="active">← Back to Portfolio</a>
+    </nav>
+
+    <article>
+      <header class="article-header">
+        <h1>Optimizing SQL Query Execution Times from Minutes to Seconds</h1>
+        <div class="article-meta">
+          <span>Published on May 15, 2026</span>
+          <span>&middot;</span>
+          <span>4 min read</span>
+          <span>&middot;</span>
+          <span>980 views</span>
+        </div>
+      </header>
+
+      <section class="article-content">
+        <p>
+          Slow SQL queries are the silent killers of backend service performance. As database tables grow, queries that initially took milliseconds begin to crawl, taking minutes to complete.
+        </p>
+
+        <p>
+          Recently, we encountered a reporting query at Zenoti that took nearly 3 minutes to return aggregate lead conversion data. Here is the process we used to reduce that query runtime to less than 5 seconds.
+        </p>
+
+        <h2>1. Analyzing the Execution Plan</h2>
+        <p>
+          The first step was running an <code>EXPLAIN ANALYZE</code> command on the query. This outputs the query planner's execution tree along with exact timings:
+        </p>
+
+        <pre><code>EXPLAIN ANALYZE
+SELECT lead_id, COUNT(action_id)
+FROM lead_actions
+WHERE created_at &gt;= '2026-01-01'
+GROUP BY lead_id;</code></pre>
+
+        <p>
+          The output showed a massive <strong>Sequential Scan (Seq Scan)</strong> across 15 million rows in the <code>lead_actions</code> table. The query planner was reading the entire table from disk because no appropriate index was available.
+        </p>
+
+        <h2>2. Introducing Composite Indexes</h2>
+        <p>
+          We created a composite B-Tree index on the columns used in the filter and grouping stages:
+        </p>
+
+        <pre><code>CREATE INDEX idx_lead_actions_created_lead
+ON lead_actions (created_at, lead_id);</code></pre>
+
+        <p>
+          This allowed the query planner to switch to an <strong>Index Only Scan</strong>, bypassing raw table blocks and reading aggregated statistics directly from the index blocks in memory.
+        </p>
+
+        <h2>3. Results</h2>
+        <p>
+          Execution time dropped from **178 seconds to 4.2 seconds**. The database CPU load decreased by 40% during peak report generation hours.
+        </p>
+      </section>
+    </article>
+
+    <footer>
+      <div>&copy; 2026 Rohit Bagade</div>
+      <div>
+        <a href="https://github.com/Roht5" target="_blank" rel="noreferrer noopener">github</a> &middot;
+        <a href="https://linkedin.com/" target="_blank" rel="noreferrer noopener">linkedin</a> &middot;
+        <a href="mailto:rohit@example.com">email</a>
+      </div>
+    </footer>
+  </div>
+
+  <script src="/blog/script.js"></script>
+</body>
+</html>
