@@ -12,10 +12,19 @@
 <body>
   <p>Redirecting to resume...</p>
   <script>
+    var DRIVE_FOLDER = "https://drive.google.com/drive/u/0/folders/1oGXa3U7pPXHj2WOIi6uaINk5wbx-_pqB";
+
+    function toViewUrl(url) {
+      var idMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+      if (!idMatch) idMatch = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+      if (idMatch) return "https://drive.google.com/file/d/" + idMatch[1] + "/view";
+      return url;
+    }
+
     fetch("https://script.google.com/macros/s/AKfycby75PMLSbpTxL846-kBvuIIVQw-uRDR21H3A0wE2WNjMBOpXXvQXMK_yTkT6QUStTKN4w/exec")
       .then(function(r) { return r.json(); })
-      .then(function(data) { window.location.replace(data.url); })
-      .catch(function() { window.location.replace("https://drive.google.com/drive/u/0/folders/1oGXa3U7pPXHj2WOIi6uaINk5wbx-_pqB"); });
+      .then(function(data) { window.location.replace(toViewUrl(data.url)); })
+      .catch(function() { window.location.replace(DRIVE_FOLDER); });
   </script>
 </body>
 </html>
