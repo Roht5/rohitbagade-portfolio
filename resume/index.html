@@ -4,16 +4,106 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <title>Resume | Rohit Bagade</title>
   <style>
-    body { background: #15130f; color: #a39d8a; font-family: 'JetBrains Mono', monospace; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
-    a { color: #ffb454; }
+    body {
+      background: #15130f;
+      color: #a39d8a;
+      font-family: 'JetBrains Mono', monospace;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .terminal {
+      max-width: 480px;
+      width: 90%;
+    }
+    .terminal-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 14px;
+      background: #1a1712;
+      border: 1px solid #2a2520;
+      border-bottom: none;
+      border-radius: 8px 8px 0 0;
+    }
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot-red { background: #ff5f56; }
+    .dot-yellow { background: #ffbd2e; }
+    .dot-green { background: #27c93f; }
+    .terminal-title {
+      flex: 1;
+      text-align: center;
+      font-size: 11px;
+      color: #6e6a5a;
+    }
+    .terminal-body {
+      background: #1a1712;
+      border: 1px solid #2a2520;
+      border-top: none;
+      border-radius: 0 0 8px 8px;
+      padding: 24px 20px;
+    }
+    .line {
+      margin-bottom: 12px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .prompt { color: #ffb454; }
+    .cmd { color: #ece7da; }
+    .output { color: #6e6a5a; }
+    .spinner {
+      display: inline-block;
+      animation: spin 0.8s steps(4) infinite;
+    }
+    @keyframes spin {
+      0% { content: '|'; }
+      25% { content: '/'; }
+      50% { content: '-'; }
+      75% { content: '\\'; }
+    }
+    .spinner::after {
+      content: '|';
+      animation: spin-chars 0.8s steps(4) infinite;
+    }
+    @keyframes spin-chars {
+      0% { content: '|'; }
+      25% { content: '/'; }
+      50% { content: '-'; }
+      75% { content: '\\'; }
+    }
   </style>
 </head>
 <body>
-  <p>Redirecting to resume...</p>
+  <div class="terminal">
+    <div class="terminal-bar">
+      <span class="dot dot-red"></span>
+      <span class="dot dot-yellow"></span>
+      <span class="dot dot-green"></span>
+      <span class="terminal-title">rohit@portfolio ~ /resume</span>
+    </div>
+    <div class="terminal-body">
+      <div class="line"><span class="output">Last login: today on ttys001</span></div>
+      <div class="line"><span class="prompt">$</span> <span class="cmd">whoami</span></div>
+      <div class="line"><span class="output">Rohit Bagade — Software Engineer</span></div>
+      <div class="line">
+        <span class="prompt">$</span> <span class="cmd">fetch --resume</span>
+      </div>
+      <div id="status" class="line">
+        <span class="output"><span class="spinner"></span> fetching...</span>
+      </div>
+    </div>
+  </div>
+
   <script>
     var DRIVE_FOLDER = "https://drive.google.com/drive/u/0/folders/1oGXa3U7pPXHj2WOIi6uaINk5wbx-_pqB";
+    var statusEl = document.getElementById("status");
 
     function toViewUrl(url) {
       var idMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
@@ -24,8 +114,18 @@
 
     fetch("https://script.google.com/macros/s/AKfycby75PMLSbpTxL846-kBvuIIVQw-uRDR21H3A0wE2WNjMBOpXXvQXMK_yTkT6QUStTKN4w/exec")
       .then(function(r) { return r.json(); })
-      .then(function(data) { window.location.replace(toViewUrl(data.url)); })
-      .catch(function() { window.location.replace(DRIVE_FOLDER); });
+      .then(function(data) {
+        statusEl.innerHTML = '<span class="prompt">done.</span> <span class="cmd">redirecting...</span>';
+        setTimeout(function() {
+          window.location.replace(toViewUrl(data.url));
+        }, 1000);
+      })
+      .catch(function() {
+        statusEl.innerHTML = '<span class="prompt">done.</span> <span class="cmd">redirecting...</span>';
+        setTimeout(function() {
+          window.location.replace(DRIVE_FOLDER);
+        }, 1000);
+      });
   </script>
 </body>
 </html>
