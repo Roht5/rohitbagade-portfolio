@@ -122,7 +122,7 @@
 
     setTimeout(function() {
       if (!redirected) redirect(DRIVE_FOLDER);
-    }, 6000);
+    }, 5000);
 
     fetch("https://script.google.com/macros/s/AKfycby75PMLSbpTxL846-kBvuIIVQw-uRDR21H3A0wE2WNjMBOpXXvQXMK_yTkT6QUStTKN4w/exec", { redirect: "follow" })
       .then(function(r) { return r.json(); })
