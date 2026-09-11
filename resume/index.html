@@ -112,20 +112,22 @@
       return url;
     }
 
-    fetch("https://script.google.com/macros/s/AKfycby75PMLSbpTxL846-kBvuIIVQw-uRDR21H3A0wE2WNjMBOpXXvQXMK_yTkT6QUStTKN4w/exec")
+    var redirected = false;
+    function redirect(url) {
+      if (redirected) return;
+      redirected = true;
+      statusEl.innerHTML = '<span class="prompt">done.</span> <span class="cmd">redirecting...</span>';
+      setTimeout(function() { window.location.replace(url); }, 1000);
+    }
+
+    setTimeout(function() {
+      if (!redirected) redirect(DRIVE_FOLDER);
+    }, 6000);
+
+    fetch("https://script.google.com/macros/s/AKfycby75PMLSbpTxL846-kBvuIIVQw-uRDR21H3A0wE2WNjMBOpXXvQXMK_yTkT6QUStTKN4w/exec", { redirect: "follow" })
       .then(function(r) { return r.json(); })
-      .then(function(data) {
-        statusEl.innerHTML = '<span class="prompt">done.</span> <span class="cmd">redirecting...</span>';
-        setTimeout(function() {
-          window.location.replace(toViewUrl(data.url));
-        }, 1000);
-      })
-      .catch(function() {
-        statusEl.innerHTML = '<span class="prompt">done.</span> <span class="cmd">redirecting...</span>';
-        setTimeout(function() {
-          window.location.replace(DRIVE_FOLDER);
-        }, 1000);
-      });
+      .then(function(data) { redirect(toViewUrl(data.url)); })
+      .catch(function() { redirect(DRIVE_FOLDER); });
   </script>
 </body>
 </html>
